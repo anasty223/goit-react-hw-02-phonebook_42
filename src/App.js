@@ -2,7 +2,7 @@ import { Component } from "react";
 import Form from "./components/Form/Form";
 import ContactsList from "./components/ContactsList/ContactsList";
 import Filter from "./components/Filter/Filter";
-
+import Div from "./components/Container/Container";
 class App extends Component {
   state = {
     contacts: [
@@ -51,16 +51,16 @@ class App extends Component {
       contact.name.toLowerCase().includes(normalazedFilter)
     );
     return (
-      <>
+      <Div>
         <h1>Phonebook</h1>
         <Form onSubmit={this.addContacts} />
+        <Filter value={filter} onChange={this.changeFilter} />
         <h2>Contacts</h2>
         <ContactsList
           contacts={visibleContacts}
           onDeleteContact={this.deleteContact}
         />
-        <Filter value={filter} onChange={this.changeFilter} />
-      </>
+      </Div>
     );
   }
 }
