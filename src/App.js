@@ -2,6 +2,7 @@ import { Component } from "react";
 import Form from "./components/Form/Form";
 import ContactsList from "./components/ContactsList/ContactsList";
 import Filter from "./components/Filter/Filter";
+import { nanoid } from "nanoid";
 import Div from "./components/Container/Container";
 class App extends Component {
   state = {
@@ -13,25 +14,15 @@ class App extends Component {
     ],
     filter: "",
   };
-  handleInputChange = (event) => {
-    const { name, value } = event.currentTarget; // console.log("event", event.currentTarget.value);
-    this.setState({ [name]: value });
-  };
 
-  handleSubmit = (event) => {
-    event.preventDefault();
-    console.log("this.state", this.state);
-    this.reset();
-  };
-
-  addContacts = ({ id, name, number, e }) => {
-    if (this.state.contacts.find((el) => el.name === name)) {
-      alert(`${name} is already in contacts!`);
-      return;
-    }
-    const contact = { id, name, number };
-    this.setState(({ contacts }) => ({ contacts: [contact, ...contacts] }));
-  };
+  // addContacts = ({ id, name, number }) => {
+  //   if (this.state.contacts.find((el) => el.name === name)) {
+  //     alert(`${name} is already in contacts!`);
+  //     return;
+  //   }
+  //   const contact = { id, name, number };
+  //   this.setState(({ contacts }) => ({ contacts: [contact, ...contacts] }));
+  // };
   changeFilter = (e) => {
     this.setState({ filter: e.currentTarget.value });
   };
@@ -41,6 +32,25 @@ class App extends Component {
         (contact) => contact.id !== contactId
       ),
     }));
+  };
+  formSubmitHandler = ({ name, number }) => {
+    console.log("name", name);
+    console.log("number", number);
+    const { contacts } = this.state;
+    const ReturnName = contacts.find((contact) => contact.name === name);
+    if (ReturnName) {
+      alert("This name is already in the phone book ");
+    } else {
+      const contact = {
+        id: nanoid(),
+        name,
+        number,
+      };
+      console.log(contact);
+      this.setState(({ contacts }) => ({
+        contacts: [contact, ...contacts],
+      }));
+    }
   };
 
   render() {
@@ -53,7 +63,9 @@ class App extends Component {
     return (
       <Div>
         <h1>Phonebook</h1>
-        <Form onSubmit={this.addContacts} />
+
+        <Form onSubmit={this.formSubmitHandler} />
+
         <Filter value={filter} onChange={this.changeFilter} />
         <h2>Contacts</h2>
         <ContactsList
